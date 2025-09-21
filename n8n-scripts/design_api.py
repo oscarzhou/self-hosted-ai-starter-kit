@@ -28,7 +28,9 @@ def generate():
         y = (HEIGHT - total_height) // 2
 
         for line in wrapped:
-            w, _ = draw.textsize(line, font=font)
+            # Use textbbox instead of textsize
+            bbox = draw.textbbox((0, 0), line, font=font)
+            w = bbox[2] - bbox[0]
             x = (WIDTH - w) // 2
             draw.text((x, y), line, font=font, fill=(0, 0, 0, 255))
             y += line_height
@@ -40,10 +42,3 @@ def generate():
         filename = f"design_{int(time.time())}.png"
         return send_file(buf, mimetype="image/png",
                          as_attachment=True,
-                         download_name=filename)
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
