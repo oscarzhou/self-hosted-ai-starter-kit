@@ -119,6 +119,8 @@ services:
   python:
     image: python:3.11-slim
     container_name: n8n-python
+    networks: ['demo']
+    restart: unless-stopped
     working_dir: /scripts
     volumes:
       - ./n8n-scripts:/scripts
