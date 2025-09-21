@@ -89,8 +89,7 @@ services:
     volumes:
       - n8n_storage:/home/node/.n8n
       - ./n8n/demo-data:/demo-data
-      - ./shared:/data/shared
-      - ./n8n-scripts:/data/scripts
+      - ./shared:/data/sha
     depends_on:
       postgres:
         condition: service_healthy
@@ -117,4 +116,12 @@ services:
     <<: *init-ollama
     depends_on:
       - ollama-cpu
-
+  python:
+    image: python:3.11-slim
+    container_name: n8n-python
+    working_dir: /scripts
+    volumes:
+      - ./n8n-scripts:/scripts
+    command: bash -c "pip install pillow flask && python /scripts/design_api.py"
+    ports:
+      - "5001:5000"
